@@ -1,4 +1,5 @@
-import flet as ft
+# import flet as ft
+from flet import RouteChangeEvent, Text
 from .app_menu import AppMenu
 from pages.login_setup.login_page import LoginPage
 # from pages.chat_page import ChatPage
@@ -11,7 +12,7 @@ page_list = {
 }
 current_page_instance = None  # Global variable to keep track of the current page instance
 
-def route_change(event: ft.RouteChangeEvent):
+def route_change(event: RouteChangeEvent):
     global current_page_instance
     page = event.page
     route = event.route
@@ -36,6 +37,6 @@ def route_change(event: ft.RouteChangeEvent):
         
         current_page_instance = page_instance
     else:
-        page.controls.append(ft.Text("Page not found"))
+        page.controls.append(Text("Page not found"))
 
     page.update()
