@@ -1,15 +1,16 @@
 from flet import (Page, Container, Card, Column, Text, border, border_radius, 
                   colors, alignment, CrossAxisAlignment, MainAxisAlignment,
                   TextField, IconButton, Icon, KeyboardType, NumbersOnlyInputFilter,Row,
-                  ElevatedButton)
+                  ElevatedButton, Ref)
 
 class LoginPage:
+    
     def __init__(self, page: Page, **kwargs):
         self.page = page
         self.page.bgcolor = "#e6f7ff"
         self.some_value = kwargs.get("some_value", "Default Value")
         self.ip_address = kwargs.get("ip_address", "No IP Address Provided")
-        self.phone_no = 0
+        self.phone_no = Ref[TextField]()
         # Attempt to get the 'windowheight' value from kwargs or default to 400
         self._page_height = float(self.page._Control__attrs.get('height', ('650', False))[0] or '600')
         self._page_width = float(self.page._Control__attrs.get('width', ('400', False))[0] or '400')
@@ -32,20 +33,38 @@ class LoginPage:
         self.card.update()
     
     def go_permission_page(self, e):
-        print(self.phone_no)
-        print("go_permission_page")
+        # print(self.phone_no.current.value)
+        # save to session
+        self.page.session.set("user_number", self.phone_no.current.value)
+        self.phone_no.current.value = ""
+        # print("go_permission_page")
+        #Go to permission Page
+        self.page.go("/permission_page")
+
+        # self.card.update()
+    
+    def button_on_change(self, e):
+        # print(len(self.phone_no.current.value))
+        if len(self.phone_no.current.value) == 3 :
+            self.card.content.controls[1].disabled = False
+            self.card.update()
+        else:
+            self.card.content.controls[1].disabled = True
+            self.card.update()
     def main_card(self):
         card_height, card_width = self.size(50, 80)
         # print(type(card_height), card_width)
         self.card= Card(content=Column(
                                 # scale=0.9,
                                 # width=card_width - 50,
+                                adaptive=True,
                                 alignment=MainAxisAlignment.CENTER,
                                 controls=[TextField(
                                         label="Enter Your Phone No",
                                         keyboard_type= KeyboardType.NUMBER,
                                         input_filter=NumbersOnlyInputFilter(),
                                         on_focus=self.on_focus,
+                                        on_change=self.button_on_change,
                                         border=border.all(2, colors.BLACK),
                                         prefix= Text(value="+91", color=colors.BLACK),
                                         ref = self.phone_no,
@@ -53,7 +72,11 @@ class LoginPage:
                                         ),
                                 # margin=19,
                                 # height=card_height,
-                                    ElevatedButton("Next", on_click=self.go_permission_page,)
+                                    ElevatedButton("Next", 
+                                                   disabled=True,
+                                                #    width=card_width-900,
+                                                
+                                                   on_click=self.go_permission_page,)
                                     ],
                                 # width=card_width-200,
                                 

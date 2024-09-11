@@ -2,11 +2,13 @@
 from flet import RouteChangeEvent, Text
 from .app_menu import AppMenu
 from pages.login_setup.login_page import LoginPage
+from pages.login_setup.permission_page import PermissionPage
 # from pages.chat_page import ChatPage
 # from pages.contact_page import ContactPage
 
 page_list = {
     "/login_page": LoginPage,
+    "/permission_page": PermissionPage,
     # "/chat_page": ChatPage,
     # "/contact_page": ContactPage
 }
@@ -31,7 +33,7 @@ def route_change(event: RouteChangeEvent):
         
         page.controls.append(page_instance.build())
         
-        if route != "/login_page":  # Add menu to pages other than login
+        if route != "/login_page" and route != "/permission_page":  # Add menu to pages other than login
             menu = AppMenu(page)
             page.controls.append(menu.build())
         
