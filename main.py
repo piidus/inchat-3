@@ -9,6 +9,7 @@ def main(page: Page):
     page.on_route_change = route_change
 
     # Start on LoginPage or another default page
-    page.go("/login_page")
+    # page.go("/login_page")
+    page.go("/permission_page")
 
 app(target=main)
